@@ -1,0 +1,32 @@
+{
+  "name": "nervicia-spiritus",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess 'node ./dist/index.js'",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "lint": "tslint --project tsconfig.json",
+    "compile": "npm run lint && rm -rf dist/ && tsc -p .",
+    "prettier": "prettier --write --single-quote --trailing-comma all 'src/**/*.ts'",
+    "test": "npm run compile; mocha --require source-map-support/register --recursive dist/test/unit"
+  },
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "lodash": "^4.17.10",
+    "moment-timezone": "^0.5.21"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/lodash": "^4.14.116",
+    "@types/mocha": "^5.2.5",
+    "@types/moment-timezone": "^0.5.7",
+    "@types/node": "^10.5.8",
+    "chai": "^4.1.2",
+    "eslint": "^4.6.1",
+    "mocha": "^5.2.0",
+    "prettier": "1.7.0",
+    "tsc-watch": "^1.0.26",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.1"
+  }
+}
