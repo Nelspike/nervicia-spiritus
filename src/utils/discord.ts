@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import { Client, Guild, GuildChannel, TextChannel } from 'discord.js';
+import { Client, Guild, GuildChannel, Role, TextChannel } from 'discord.js';
 
 import { nerviciaId } from '../config';
-import { Result } from '../types/base';
+import { ItemWithPoints, Result } from '../types/base';
 
 /**
  * Finds the Nervicia Guild object, given its ID.
@@ -76,4 +76,45 @@ function findTextChannel(client: Client, id: string): Result<TextChannel> {
   };
 }
 
-export { findTextChannel };
+function findRole(guild: Guild, name: string): Result<Role> {
+  const { roles } = guild;
+
+  const role = roles.find('name', name);
+
+  if (_.isEmpty(role)) {
+    return {
+      type: 'error',
+      reason: `Cannot find role ${name}`,
+    };
+  }
+
+  return {
+    type: 'ok',
+    value: role,
+  };
+}
+
+function _mapPoints(
+  { name, points, list }: ItemWithPoints,
+  index: number,
+): string {
+  return `${index + 1}. ${name} (${points})
+  ${_.sortBy(list).join(', ')}
+  `;
+}
+
+function generatePointList(items: ItemWithPoints[]): string {
+  const list = _.chain(items)
+    .orderBy('points', ['desc'])
+    .slice(0, 10)
+    .value();
+  const pointList = _.map(list, _mapPoints);
+
+  return `__**ACHIEVEMENT LEADERBOARDS**__
+\`\`\`
+${pointList.join('\n')}
+\`\`\`
+  `;
+}
+
+export { findRole, findTextChannel, generatePointList };

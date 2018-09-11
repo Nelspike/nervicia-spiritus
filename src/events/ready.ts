@@ -13,8 +13,10 @@ function ready(client: Client): void {
       throw new Error(channelResult.reason);
     }
 
-    const channel = channelResult.value;
-    channel.send("Guess who's in town, boys!");
+    console.log('Whoop!'); // tslint:disable-line
+
+    // const channel = channelResult.value;
+    // channel.send("Guess who's in town, boys!");
   });
 }
 

@@ -14,4 +14,10 @@ interface Err {
 
 type Result<T> = Ok<T> | Err;
 
-export { Result };
+interface ItemWithPoints {
+  name: string;
+  points: number;
+  list: string[];
+}
+
+export { ItemWithPoints, Result };
