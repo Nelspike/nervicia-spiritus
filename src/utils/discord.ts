@@ -1,8 +1,15 @@
 import * as _ from 'lodash';
-import { Client, Guild, GuildChannel, Role, TextChannel } from 'discord.js';
+import {
+  Client,
+  Guild,
+  GuildChannel,
+  Role,
+  TextChannel,
+  User,
+} from 'discord.js';
 
 import { nerviciaId } from '../config';
-import { ItemWithPoints, Result } from '../types/base';
+import { MessageWithFiles, Result } from '../types/base';
 
 /**
  * Finds the Nervicia Guild object, given its ID.
@@ -94,27 +101,13 @@ function findRole(guild: Guild, name: string): Result<Role> {
   };
 }
 
-function _mapPoints(
-  { name, points, list }: ItemWithPoints,
-  index: number,
-): string {
-  return `${index + 1}. ${name} (${points})
-  ${_.sortBy(list).join(', ')}
-  `;
+function sendMessage(msg: MessageWithFiles, target: TextChannel | User): void {
+  if (msg.options) {
+    target.send(msg.message, msg.options);
+    return;
+  }
+
+  target.send(msg.message);
 }
 
-function generatePointList(items: ItemWithPoints[]): string {
-  const list = _.chain(items)
-    .orderBy('points', ['desc'])
-    .slice(0, 10)
-    .value();
-  const pointList = _.map(list, _mapPoints);
-
-  return `__**ACHIEVEMENT LEADERBOARDS**__
-\`\`\`
-${pointList.join('\n')}
-\`\`\`
-  `;
-}
-
-export { findRole, findTextChannel, generatePointList };
+export { findRole, findTextChannel, sendMessage };

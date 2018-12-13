@@ -1,3 +1,5 @@
+import { MessageOptions, User, TextChannel } from 'discord.js';
+
 /**
  * Monad Declarations
  */
@@ -20,4 +22,17 @@ interface ItemWithPoints {
   list: string[];
 }
 
-export { ItemWithPoints, Result };
+interface MessageWithFiles {
+  message: string;
+  options?: MessageOptions;
+}
+
+interface MessageAction {
+  type: 'message';
+  target: TextChannel | User;
+  message: MessageWithFiles;
+}
+
+type Action = MessageAction;
+
+export { Action, MessageAction, ItemWithPoints, MessageWithFiles, Result };
