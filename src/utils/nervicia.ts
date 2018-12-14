@@ -1,15 +1,97 @@
 import * as _ from 'lodash';
-import { Message } from 'discord.js';
+import { GuildMember, Message } from 'discord.js';
 
 import {
   getCommandContent,
+  generateAchievementList,
   generatePointList,
   generateSubmission,
 } from '../utils/message';
 
-import { ItemWithPoints, MessageWithFiles, Result } from '../types/base';
+import { getUser } from '../utils/storage';
 
-function getLeaderboard(msg: Message): Result<MessageWithFiles> {
+import {
+  ItemWithPoints,
+  MessageWithFiles,
+  Result,
+  NerviciaUser,
+} from '../types/base';
+
+function getRolePoints(role: string): number {
+  switch (role) {
+    case "Captain Bash Won't Miss!":
+    case "Firin' Muh Laz0r!":
+    case "Man's Best Friend":
+    case '"Up"setting the Enemy':
+    case '420Blazeit':
+    case 'All-Out Attack!':
+    case 'Apocalypse Now':
+    case 'Black-Whole':
+    case 'Bouncy Ball':
+    case 'Carry':
+    case 'Cold-Blooded':
+    case 'Crystal':
+    case 'Crystarium':
+    case 'Dancing Queen':
+    case 'Director of Rage':
+    case 'Dr. Main':
+    case 'Fab Dab':
+    case 'Farcical Healer':
+    case 'Finisher':
+    case 'Flawless Crystal':
+    case 'For Wall Solidor!':
+    case 'Going Commando':
+    case 'Good Boy':
+    case 'Hello Darkness...':
+    case 'Heresy':
+    case 'I Cherish':
+    case 'Jack of All Trades':
+    case 'King Kounter':
+    case 'Knight of the Round':
+    case 'Layered Onion':
+    case 'Like A Glove':
+    case 'Loud Jester':
+    case 'Ohh, Soft!':
+    case 'Ohohohoh!':
+    case 'Outcast':
+    case 'Over 9000':
+    case 'Returning Champion':
+    case 'Self-Obsessed':
+    case 'Selfest-Loather':
+    case 'Shield of Light':
+    case 'Shiny Crystal':
+    case 'Show Off':
+    case 'Spectral Acrobatic':
+    case 'Star Player':
+    case 'Surfer':
+    case 'Terminator':
+    case 'TideTurner':
+    case 'To the moon':
+    case 'Top Agent':
+    case 'Tourney Winner':
+    case 'Treasure Hunter':
+    case 'Trigger Happy':
+      return 0;
+    default:
+      throw new Error('Role was not found');
+  }
+}
+
+function isEventStaff(author: GuildMember): boolean {
+  if (_.isUndefined(author)) {
+    return false;
+  }
+
+  const staffRoles = ['Event Organizer', 'Event Head'];
+
+  const { roles } = author;
+
+  const eventRoles = roles.filter(role => _.includes(staffRoles, role.name));
+
+  return !_.isEmpty(eventRoles);
+}
+
+function getAchievementLeaderboard(msg: Message): Result<MessageWithFiles> {
   const { guild } = msg;
 
   if (_.isUndefined(guild)) {
@@ -106,6 +188,38 @@ function getLeaderboard(msg: Message): Result<MessageWithFiles> {
     };
   }
 
+  const embed = generateAchievementList(leaders);
+
+  return {
+    type: 'ok',
+    value: { message: '', options: { embed } },
+  };
+}
+
+function getPointLeaderboard(msg: Message): Result<MessageWithFiles> {
+  const { guild } = msg;
+
+  if (_.isUndefined(guild)) {
+    return {
+      type: 'error',
+      reason: 'Could not find the server this user is in',
+    };
+  }
+
+  const members = guild.members.array();
+  const leaders: NerviciaUser[] = _.map(members, member => {
+    const { user } = member;
+    const { username } = user;
+    return getUser(username);
+  });
+
+  if (_.isEmpty(leaders)) {
+    return {
+      type: 'error',
+      reason: 'There are no leaders or achievements',
+    };
+  }
+
   const embed = generatePointList(leaders);
 
   return {
@@ -136,4 +250,10 @@ function getSubmission(msg: Message): Result<MessageWithFiles> {
   return { type: 'ok', value };
 }
 
-export { getLeaderboard, getSubmission };
+export {
+  isEventStaff,
+  getAchievementLeaderboard,
+  getPointLeaderboard,
+  getRolePoints,
+  getSubmission,
+};

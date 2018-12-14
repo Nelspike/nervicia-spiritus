@@ -3,6 +3,7 @@ import { Client } from 'discord.js';
 
 import { eventOrganizersId } from '../config';
 
+import { loadDatabase } from '../utils/storage';
 import { findTextChannel } from '../utils/discord';
 
 function ready(client: Client): void {
@@ -12,6 +13,8 @@ function ready(client: Client): void {
     if (channelResult.type === 'error') {
       throw new Error(channelResult.reason);
     }
+
+    loadDatabase();
 
     console.log('Whoop!'); // tslint:disable-line
 

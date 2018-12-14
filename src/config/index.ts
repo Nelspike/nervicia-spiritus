@@ -7,4 +7,13 @@ const eventOrganizersId = '478262073000722434';
 
 const commandPrefix = '!';
 
-export { commandPrefix, eventOrganizersId, nerviciaId, token };
+const embedThumbnail =
+  'https://cdn.discordapp.com/attachments/478262073000722434/522760983924572161/Achievementbanner.png';
+
+export {
+  commandPrefix,
+  embedThumbnail,
+  eventOrganizersId,
+  nerviciaId,
+  token,
+};

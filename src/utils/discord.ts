@@ -38,7 +38,7 @@ function _findNervicia(client: Client): Result<Guild> {
   };
 }
 
-function _isTextChannel(channel: GuildChannel): channel is TextChannel {
+function isTextChannel(channel: GuildChannel): channel is TextChannel {
   return channel.type === 'text';
 }
 
@@ -70,7 +70,7 @@ function findTextChannel(client: Client, id: string): Result<TextChannel> {
     };
   }
 
-  if (!_isTextChannel(channel)) {
+  if (!isTextChannel(channel)) {
     return {
       type: 'error',
       reason: `Channel with ${id} is not a text channel`,
@@ -110,4 +110,4 @@ function sendMessage(msg: MessageWithFiles, target: TextChannel | User): void {
   target.send(msg.message);
 }
 
-export { findRole, findTextChannel, sendMessage };
+export { isTextChannel, findRole, findTextChannel, sendMessage };

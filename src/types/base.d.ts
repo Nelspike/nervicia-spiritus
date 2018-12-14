@@ -1,4 +1,4 @@
-import { MessageOptions, User, TextChannel } from 'discord.js';
+import { GuildMember, MessageOptions, TextChannel, User } from 'discord.js';
 
 /**
  * Monad Declarations
@@ -22,6 +22,11 @@ interface ItemWithPoints {
   list: string[];
 }
 
+interface NerviciaUser {
+  name: string;
+  points: number;
+}
+
 interface MessageWithFiles {
   message: string;
   options?: MessageOptions;
@@ -33,6 +38,21 @@ interface MessageAction {
   message: MessageWithFiles;
 }
 
-type Action = MessageAction;
+interface AwardAction {
+  type: 'award';
+  target: GuildMember;
+  role: string;
+  points: number;
+}
 
-export { Action, MessageAction, ItemWithPoints, MessageWithFiles, Result };
+type Action = AwardAction | MessageAction;
+
+export {
+  Action,
+  AwardAction,
+  MessageAction,
+  ItemWithPoints,
+  MessageWithFiles,
+  Result,
+  NerviciaUser,
+};
